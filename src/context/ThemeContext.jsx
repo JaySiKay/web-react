@@ -1,4 +1,5 @@
 import {createContext, useContext, useMemo, useState} from 'react';
+
 const ThemeContext = createContext(null);
 
 export function ThemeProvider({children, initial = 'light'}) {
@@ -13,6 +14,7 @@ export function ThemeProvider({children, initial = 'light'}) {
         </div>
     );
 }
+
 export function useTheme() {
     const ctx = useContext(ThemeContext);
     if (!ctx) throw new Error('useTheme повинна використовуватися тільки всередині ThemeProvider');
