@@ -1,27 +1,37 @@
 import { useState } from "react";
-
+import { useNavigateCountdown } from "../hooks/useNavigateCountdown.js";
 export default function ContactFormBasic() {
     const [status, setStatus] = useState('idle');
     const [error, setError] = useState('');
-
+    const { startCountdown } = useNavigateCountdown();
     const endpoint = '/echo/post';
 
     async function onSubmit(e) {
         e.preventDefault();
         setStatus('loading');
         setError('');
+
         const form = e.target;
         const fd = new FormData(form);
+
         try {
             const res = await fetch(endpoint, {method: "POST", body: fd});
+
             if (!res.ok) {
                 const errJson = await res.json().catch(() => ({}));
                 throw new Error(errJson?.message || `HTTP ${res.status}`);
             }
+
             const json = await res.json();
             console.log(json);
-            setStatus('success ;)');
+
+            setStatus('success');
             form.reset();
+
+            startCountdown(5, "/", {
+                replace: true,
+                state: { from: "contact-success" },
+            });
         } catch (e) {
             setError(e.message || 'Network error');
             setStatus('error');
